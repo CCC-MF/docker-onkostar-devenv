@@ -1,0 +1,6 @@
+initdb.d/*
+onkostar.d/*
+plugins.d/*
+
+!.gitkeep
+!onkostar.d/onkostar.ini

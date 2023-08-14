@@ -1,0 +1,30 @@
+version: '2'
+
+services:
+
+  onkostar:
+    image: tomcat:9.0.73-jdk11
+    ports:
+      - 8080:8080
+    depends_on:
+      - mariadb
+    volumes:
+      # Onkostar WAR file, License file and configs
+      - "./onkostar.d/onkostar*.war:/usr/local/tomcat/webapps/onkostar.war:ro"
+      - "./onkostar.d/onkostar.ini:/opt/onkostar.ini"
+      - "./onkostar.d/*.xml.sign:/opt/onkostar/files/onkostar/lizenz/Onkostar-Lizenz.xml.sign:ro"
+      # Plugin directory
+      - "./plugins.d:/opt/onkostar/files/onkostar/plugins:ro"
+
+  mariadb:
+    image: mariadb:10
+    ports:
+      - 3306:3306
+    volumes:
+      # Files to initialize database on first start
+      - "./initdb-backup.d:/docker-entrypoint-initdb.d:ro"
+    environment:
+      MARIADB_DATABASE: onkostar
+      MARIADB_USER: onkostar
+      MARIADB_PASSWORD: devpass
+      MARIADB_ROOT_PASSWORD: devpass
